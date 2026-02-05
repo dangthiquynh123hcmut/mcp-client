@@ -143,7 +143,6 @@ class MCPClient:
                 
                 final_text.append(f"Tool result: {tool_content}")
                 
-                # Gửi kết quả tool lại cho model để tiếp tục xử lý
                 # Input phải là string hoặc array of message objects
                 followup_response = self.open_ai.responses.create(
                     model=OPENAI_MODEL,

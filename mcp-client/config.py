@@ -7,7 +7,7 @@ class Settings(BaseSettings):
         "MCP_SERVER_PATH", 
         "e:\\works\\claude_final\\new_project\\main.py"
     )
-    api_host: str = "127.0.0.1"  # Hoặc "localhost"
+    api_host: str = "127.0.0.1"
     api_port: int = 8001
 
 settings = Settings()

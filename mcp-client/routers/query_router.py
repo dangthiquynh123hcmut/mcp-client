@@ -5,11 +5,9 @@ from fastapi import FastAPI, Body
 router = APIRouter(prefix="/api", tags=["query"])
 
 def setup_routes(app: "FastAPI"):
-    """Setup all routes"""
     
     @router.get("/tools")
     async def get_available_tools():
-        """Get list of available tools"""
         if not app.state.client_connected:
             raise HTTPException(status_code=503, detail="MCP Server not connected")
         try:

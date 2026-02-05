@@ -37,7 +37,6 @@ def create_app() -> FastAPI:
         lifespan=lifespan
     )
 
-    # Add CORS middleware
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
@@ -46,7 +45,6 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # Setup routes
     setup_routes(app)
 
     return app
