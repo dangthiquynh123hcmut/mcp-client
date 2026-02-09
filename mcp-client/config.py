@@ -1,13 +1,16 @@
+from pathlib import Path
 from pydantic_settings import BaseSettings
 import os
 
+BASE_DIR = Path(__file__).resolve().parent
+
 class Settings(BaseSettings):
-    # MCP Server path - cấu hình từ .env hoặc mặc định
-    server_script_path: str = os.getenv(
+    server_script_path: str = str(os.getenv(
         "MCP_SERVER_PATH", 
-        "e:\\works\\claude_final\\new_project\\main.py"
-    )
-    api_host: str = "127.0.0.1"
-    api_port: int = 8001
+        BASE_DIR / "mcp_server.py"
+    ))
+    
+    api_host: str = os.getenv("MCP_SERVER_HOST", "localhost")
+    api_port: int = int(os.getenv("MCP_SERVER_PORT", 8001))
 
 settings = Settings()

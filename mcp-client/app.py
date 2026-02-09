@@ -7,7 +7,6 @@ from routers.query_router import setup_routes
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
     client = MCPClient()
     app.state.client = client
     app.state.client_connected = False
@@ -16,22 +15,14 @@ async def lifespan(app: FastAPI):
         connected = await client.connect_to_server(settings.server_script_path)
         if connected:
             app.state.client_connected = True
-            print("✅ MCP Server connected successfully!")
         else:
-            print("⚠️  MCP Server connection failed")
+            print("MCP Server connection failed")
     except Exception as e:
-        print(f"⚠️  MCP Server connection error: {str(e)}")
+        print(f"MCP Server connection error: {str(e)}")
     
     yield
-    
-    # Shutdown
-    try:
-        await client.cleanup()
-    except Exception as e:
-        print(f"Cleanup error: {str(e)}")
 
 def create_app() -> FastAPI:
-    """Create and configure FastAPI app"""
     app = FastAPI(
         title="MCP Chatbot API",
         lifespan=lifespan
