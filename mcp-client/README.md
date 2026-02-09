@@ -1,6 +1,6 @@
 # MCP Client - FastAPI Gateway
 
-FastAPI gateway tích hợp MCP client, OpenAI GPT-4, và hệ thống backend CDS. Gateway này đóng vai trò trung gian giữa frontend web và MCP server, cung cấp REST API endpoints cho chatbot.
+FastAPI gateway tích hợp MCP server, OpenAI GPT-4, và hệ thống backend CDS. Gateway này đóng vai trò trung gian giữa frontend web và MCP server, cung cấp REST API endpoints cho chatbot và xử lý việc tạo CRF (Case Report Form) thông qua các công cụ MCP.
 
 ## Architecture
 
@@ -9,10 +9,21 @@ Frontend Web
     ↓ (HTTP)
 MCP Client Gateway (FastAPI)
     ├→ OpenAI GPT-4 (Tool Selection & Orchestration)
-    └→ MCP Server (stdio)
-         ↓
-       CDS Backend
+    ├→ MCP Server (FastMCP)
+    │  ├→ laboratory_test Tool
+    │  └─→ CDS Backend API
+    └─→ AI Backend (CDS)
+         ├→ Laboratory Test Processing
+         └→ CRF Form Generation
 ```
+
+## Features
+
+- **MCP Server Integration**: Tích hợp FastMCP server với các công cụ chuyên biệt
+- **Laboratory Test Tool**: Tạo CRF form cho xét nghiệm lâm sàng
+- **OpenAI Integration**: Sử dụng GPT-4 cho lựa chọn và orchetra công cụ
+- **REST API**: Cung cấp endpoints cho frontend web
+- **Backend Integration**: Kết nối đến CDS backend API
 
 ## Installation
 
@@ -36,9 +47,8 @@ Tạo file `.env`:
 # OpenAI Configuration
 OPENAI_API_KEY=sk-...
 
-# MCP Server Configuration
-MCP_SERVER_SCRIPT_PATH=/path/to/new_project/main.py
-MCP_SERVER_TYPE=python  # python hoặc node
+# AI Backend Configuration
+AI_BACKEND_URL=http://localhost:8000
 
 # FastAPI Configuration
 API_HOST=127.0.0.1
@@ -51,13 +61,11 @@ LOG_LEVEL=INFO
 Hoặc edit `config.py`:
 
 ```python
-server_script_path = "/path/to/new_project/main.py"
-server_type = "python"
+openai_api_key = "sk-..."
+ai_backend_url = "http://localhost:8000"
 api_host = "127.0.0.1"
 api_port = 8001
-```
-
-## Running
+```## Running
 
 ```bash
 python main.py
@@ -65,5 +73,21 @@ python main.py
 
 Gateway sẽ:
 1. Khởi động FastAPI server tại `http://127.0.0.1:8001`
-2. Kết nối đến MCP server via stdio
-3. Sẵn sàng nhận requests từ frontend
+2. Khởi động MCP server với các công cụ được định nghĩa
+3. Kết nối đến CDS AI Backend
+4. Sẵn sàng nhận requests từ frontend
+
+## Development
+
+```bash
+# Run with hot reload
+uvicorn main:app --reload --host 127.0.0.1 --port 8001
+```
+
+## Dependencies
+
+- FastAPI
+- Pydantic
+- MCP (Model Context Protocol)
+- OpenAI Python SDK
+- Requests
