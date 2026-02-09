@@ -16,9 +16,9 @@ async def lifespan(app: FastAPI):
         if connected:
             app.state.client_connected = True
         else:
-            print("MCP Server connection failed")
+            raise RuntimeError("MCP Server connection failed")
     except Exception as e:
-        print(f"MCP Server connection error: {str(e)}")
+        raise RuntimeError(f"MCP Server connection error: {str(e)}")
     
     yield
 

@@ -46,7 +46,7 @@ class MCPClient:
 
         await self.session.initialize()
 
-        tools = (await self.session.list_tools()).tools
+        (await self.session.list_tools()).tools
         return True
 
     async def process_query(self, query: str) -> str:
